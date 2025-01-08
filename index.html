@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kombucha Calculator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            background-color: #f9f5f0;
+        }
+        .calculator {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #4a5568;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        .recipe {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f7fafc;
+            border-radius: 4px;
+        }
+        .recipe-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            background: white;
+        }
+        button {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Kombucha Calculator</h1>
+        
+        <div class="input-group">
+            <label for="preset">Recipe Preset:</label>
+            <select id="preset" onchange="applyPreset()">
+                <option value="sweet">Sweet Kombucha (Max Sugar)</option>
+                <option value="balanced">Balanced Kombucha</option>
+                <option value="light">Light Kombucha (Low Sugar)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="batch-size">Desired Batch Size (L):</label>
+            <input type="number" id="batch-size" value="1" min="0.1" step="0.1" onchange="calculateRecipe()">
+        </div>
+
+        <div class="recipe">
+            <h2>Recipe:</h2>
+            <div class="recipe-item">
+                <span>Water:</span>
+                <span id="water">1 L</span>
+            </div>
+            <div class="recipe-item">
+                <span>Sugar:</span>
+                <span id="sugar">70 g</span>
+            </div>
+            <div class="recipe-item">
+                <span>Tea:</span>
+                <span id="tea">6 g</span>
+            </div>
+            <div class="recipe-item">
+                <span>Starter:</span>
+                <span id="starter">100 mL</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base recipes for different styles
+        const recipes = {
+            sweet: {
+                water: 1,
+                sugar: 70,
+                tea: 6,
+                starter: 100
+            },
+            balanced: {
+                water: 1,
+                sugar: 50,
+                tea: 6,
+                starter: 100
+            },
+            light: {
+                water: 1,
+                sugar: 30,
+                tea: 6,
+                starter: 100
+            }
+        };
+
+        let currentRecipe = recipes.sweet;
+
+        function applyPreset() {
+            const preset = document.getElementById('preset').value;
+            currentRecipe = recipes[preset];
+            calculateRecipe();
+        }
+
+        function calculateRecipe() {
+            const batchSize = parseFloat(document.getElementById('batch-size').value);
+            
+            if (batchSize <= 0 || isNaN(batchSize)) {
+                alert('Please enter a valid batch size');
+                return;
+            }
+
+            // Update display with scaled values
+            document.getElementById('water').textContent = `${(currentRecipe.water * batchSize).toFixed(1)} L`;
+            document.getElementById('sugar').textContent = `${Math.round(currentRecipe.sugar * batchSize)} g`;
+            document.getElementById('tea').textContent = `${Math.round(currentRecipe.tea * batchSize)} g`;
+            document.getElementById('starter').textContent = `${Math.round(currentRecipe.starter * batchSize)} mL`;
+        }
+
+        // Initialize with default values
+        calculateRecipe();
+    </script>
+</body>
+</html>
